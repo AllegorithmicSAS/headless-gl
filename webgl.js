@@ -877,6 +877,10 @@ gl.getSupportedExtensions = function getSupportedExtensions() {
     exts.push('EXT_blend_minmax');
   }
 
+  if (supportedExts.indexOf('GL_EXT_shader_texture_lod') >= 0) {
+    exts.push('EXT_shader_texture_lod');
+  }
+
   return exts;
 };
 
@@ -1158,6 +1162,15 @@ function drawBuffersWEBGL(buffers) {
   _drawBuffersWEBGL.call(this, buffers);
 }
 
+function getShadertextureLOD(context) {
+  var result = null;
+  var exts = context.getSupportedExtensions();
+  if (exts && exts.indexOf('EXT_shader_texture_lod') >= 0) {
+    result = context.ext_shader_texture_lod;
+  }
+  return result;
+}
+
 function getBlendMinMax(context) {
   var result = null;
   var exts = context.getSupportedExtensions();
@@ -1242,6 +1255,9 @@ gl.getExtension = function getExtension(name) {
       break;
     case 'ext_blend_minmax':
       ext = getBlendMinMax(this);
+      break;
+    case 'ext_shader_texture_lod':
+      ext = getShadertextureLOD(this);
       break;
   }
   if (ext) {

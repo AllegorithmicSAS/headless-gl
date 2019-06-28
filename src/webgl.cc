@@ -2131,3 +2131,8 @@ GL_METHOD(EXT_blend_minmax) {
   Nan::Set(result, Nan::New("MAX_EXT").ToLocalChecked(), Nan::New<v8::Number>(GL_MAX_EXT));
   info.GetReturnValue().Set(result);
 }
+
+GL_METHOD(EXT_shader_texture_lod) {
+  v8::Local<v8::Object> result = Nan::New<v8::Object>();
+  info.GetReturnValue().Set(result);
+}
