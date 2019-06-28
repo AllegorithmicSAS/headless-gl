@@ -1,67 +1,68 @@
-'use strict'
+'use strict';
 
-function createContext (width, height, options) {
-  width = width | 0
-  height = height | 0
+function createContext(width, height, options) {
+  width = width | 0;
+  height = height | 0;
   if (!(width > 0 && height > 0)) {
-    return null
+    return null;
   }
 
-  var canvas = document.createElement('canvas')
+  var canvas = document.createElement('canvas');
   if (!canvas) {
-    return null
+    return null;
   }
-  var gl
-  canvas.width = width
-  canvas.height = height
+  var gl;
+  canvas.width = width;
+  canvas.height = height;
 
   try {
-    gl = canvas.getContext('webgl', options)
+    gl = canvas.getContext('webgl', options);
   } catch (e) {
     try {
-      gl = canvas.getContext('experimental-webgl', options)
+      gl = canvas.getContext('experimental-webgl', options);
     } catch (e) {
-      return null
+      return null;
     }
   }
 
-  var _getExtension = gl.getExtension
+  var _getExtension = gl.getExtension;
   var extDestroy = {
-    destroy: function () {
-      var loseContext = _getExtension.call(gl, 'WEBGL_lose_context')
+    destroy: function() {
+      var loseContext = _getExtension.call(gl, 'WEBGL_lose_context');
       if (loseContext) {
-        loseContext.loseContext()
+        loseContext.loseContext();
       }
     }
-  }
+  };
 
   var extResize = {
-    resize: function (w, h) {
-      canvas.width = w
-      canvas.height = h
+    resize: function(w, h) {
+      canvas.width = w;
+      canvas.height = h;
     }
-  }
+  };
 
-  var _supportedExtensions = gl.getSupportedExtensions().slice()
+  var _supportedExtensions = gl.getSupportedExtensions().slice();
   _supportedExtensions.push(
     'STACKGL_destroy_context',
-    'STACKGL_resize_drawingbuffer')
-  gl.getSupportedExtensions = function () {
-    return _supportedExtensions.slice()
-  }
+    'STACKGL_resize_drawingbuffer'
+  );
+  gl.getSupportedExtensions = function() {
+    return _supportedExtensions.slice();
+  };
 
-  gl.getExtension = function (extName) {
-    var name = extName.toLowerCase()
+  gl.getExtension = function(extName) {
+    var name = extName.toLowerCase();
     if (name === 'stackgl_resize_drawingbuffer') {
-      return extResize
+      return extResize;
     }
     if (name === 'stackgl_destroy_context') {
-      return extDestroy
+      return extDestroy;
     }
-    return _getExtension.call(gl, extName)
-  }
+    return _getExtension.call(gl, extName);
+  };
 
-  return gl || null
+  return gl || null;
 }
 
-module.exports = createContext
+module.exports = createContext;
