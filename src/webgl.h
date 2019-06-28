@@ -266,6 +266,7 @@ struct WebGLRenderingContext : public node::ObjectWrap {
 
   static NAN_METHOD(DrawBuffersWEBGL);
   static NAN_METHOD(EXTWEBGL_draw_buffers);
+  static NAN_METHOD(EXT_blend_minmax);
 
   void initPointers();
 

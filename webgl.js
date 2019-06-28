@@ -873,6 +873,10 @@ gl.getSupportedExtensions = function getSupportedExtensions() {
     exts.push('WEBGL_draw_buffers');
   }
 
+  if (supportedExts.indexOf('GL_EXT_blend_minmax') >= 0) {
+    exts.push('EXT_blend_minmax');
+  }
+
   return exts;
 };
 
@@ -1154,6 +1158,15 @@ function drawBuffersWEBGL(buffers) {
   _drawBuffersWEBGL.call(this, buffers);
 }
 
+function getBlendMinMax(context) {
+  var result = null;
+  var exts = context.getSupportedExtensions();
+  if (exts && exts.indexOf('EXT_blend_minmax') >= 0) {
+    result = context.ext_blend_minmax();
+  }
+  return result;
+}
+
 function getWebGLDrawBuffers(context) {
   var result = null;
   var exts = context.getSupportedExtensions();
@@ -1226,6 +1239,9 @@ gl.getExtension = function getExtension(name) {
       break;
     case 'webgl_draw_buffers':
       ext = getWebGLDrawBuffers(this);
+      break;
+    case 'ext_blend_minmax':
+      ext = getBlendMinMax(this);
       break;
   }
   if (ext) {
@@ -1477,7 +1493,13 @@ gl.blendColor = function blendColor(red, green, blue, alpha) {
   return _blendColor.call(this, +red, +green, +blue, +alpha);
 };
 
-function validBlendMode(mode) {
+function validBlendMode(mode, ext_blend_minmax) {
+  if (
+    ext_blend_minmax &&
+    (mode === ext_blend_minmax.MIN_EXT || mode === ext_blend_minmax.MAX_EXT)
+  ) {
+    return true;
+  }
   return (
     mode === gl.FUNC_ADD ||
     mode === gl.FUNC_SUBTRACT ||
@@ -1488,7 +1510,8 @@ function validBlendMode(mode) {
 var _blendEquation = gl.blendEquation;
 gl.blendEquation = function blendEquation(mode) {
   mode |= 0;
-  if (validBlendMode(mode)) {
+  var ext = this._extensions.ext_blend_minmax;
+  if (validBlendMode(mode, ext)) {
     return _blendEquation.call(this, mode);
   }
   setError(this, gl.INVALID_ENUM);
@@ -1498,7 +1521,8 @@ var _blendEquationSeparate = gl.blendEquationSeparate;
 gl.blendEquationSeparate = function blendEquationSeparate(modeRGB, modeAlpha) {
   modeRGB |= 0;
   modeAlpha |= 0;
-  if (validBlendMode(modeRGB) && validBlendMode(modeAlpha)) {
+  var ext = this._extensions.ext_blend_minmax;
+  if (validBlendMode(modeRGB, ext) && validBlendMode(modeAlpha, ext)) {
     return _blendEquationSeparate.call(this, modeRGB, modeAlpha);
   }
   setError(this, gl.INVALID_ENUM);

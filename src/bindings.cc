@@ -161,6 +161,7 @@ NAN_MODULE_INIT(Init) {
   JS_GL_METHOD("destroy", Destroy);
   JS_GL_METHOD("drawBuffersWEBGL", DrawBuffersWEBGL);
   JS_GL_METHOD("extWEBGL_draw_buffers", EXTWEBGL_draw_buffers);
+  JS_GL_METHOD("ext_blend_minmax", EXT_blend_minmax);
 
   // Windows defines a macro called NO_ERROR which messes this up
   Nan::SetPrototypeTemplate(
