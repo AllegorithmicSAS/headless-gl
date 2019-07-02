@@ -2124,3 +2124,15 @@ GL_METHOD(EXTWEBGL_draw_buffers) {
 
   info.GetReturnValue().Set(result);
 }
+
+GL_METHOD(EXT_blend_minmax) {
+  v8::Local<v8::Object> result = Nan::New<v8::Object>();
+  Nan::Set(result, Nan::New("MIN_EXT").ToLocalChecked(), Nan::New<v8::Number>(GL_MIN_EXT));
+  Nan::Set(result, Nan::New("MAX_EXT").ToLocalChecked(), Nan::New<v8::Number>(GL_MAX_EXT));
+  info.GetReturnValue().Set(result);
+}
+
+GL_METHOD(EXT_shader_texture_lod) {
+  v8::Local<v8::Object> result = Nan::New<v8::Object>();
+  info.GetReturnValue().Set(result);
+}
